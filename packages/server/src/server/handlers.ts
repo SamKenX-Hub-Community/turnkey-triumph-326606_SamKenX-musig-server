@@ -2,13 +2,19 @@ import { Interfaces } from "@arkecosystem/crypto";
 import Boom from "@hapi/boom";
 import { IStoreTransaction } from "../interfaces";
 import { store } from "../services/store";
+import { TransactionStatus } from "./enums";
 import { verifySignatures } from "./utils";
 
 export const getTransactions = (request, h) => {
     if (request.query.publicKey) {
-        return store.getTransactionsByPublicKey(request.query.publicKey);
-    } else if (request.query.senderPublicKey) {
-        return store.getTransactionsBySenderPublicKey(request.query.senderPublicKey);
+        const storeTransactions = store.getTransactionsByPublicKey(request.query.publicKey);
+
+        if (request.query.state === TransactionStatus.Pending) {
+            return storeTransactions.filter(t => t.data.signatures.length < t.multisigAsset.min);
+        } else if (request.query.state === TransactionStatus.Ready) {
+            return storeTransactions.filter(t => t.data.signatures.length >= t.multisigAsset.min);
+        }
+        return storeTransactions;
     }
 
     return store.getAllTransactions(); // keep or throw error ? (why would we need to get all tx ?)
@@ -56,4 +62,9 @@ export const putTransaction = (request, h) => {
     store.updateTransaction(data, id);
 
     return { id };
+};
+
+export const deleteTransactions = (request, h) => {
+    store.deleteAllTransactions();
+    return true;
 };

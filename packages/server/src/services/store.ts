@@ -46,22 +46,30 @@ class Store {
         return this.transactions[storeId];
     }
 
-    public getTransactionsBySenderPublicKey(senderPublicKey: string): IStoreTransaction[] {
-        const storeIds = this.txStoreIdsBySender[senderPublicKey] || [];
-        return storeIds.map(storeId => this.getTransactionById(storeId));
-    }
-
     public getTransactionsByPublicKey(publicKey: string): IStoreTransaction[] {
-        const storeIds = this.txStoreIdsByPublicKey[publicKey] || [];
-        return storeIds.map(storeId => this.getTransactionById(storeId));
+        const storeIdsBySender = this.txStoreIdsBySender[publicKey] || [];
+        const storeIdsByPublicKey = this.txStoreIdsByPublicKey[publicKey] || [];
+
+        const allById = {};
+        for (const id of storeIdsBySender.concat(storeIdsByPublicKey)) {
+            allById[id] = this.getTransactionById(id);
+        }
+
+        return Object.values(allById);
     }
 
     public getAllTransactions(): IStoreTransaction[] {
         return Object.values(this.transactions);
     }
 
+    public deleteAllTransactions(): void {
+        for (const id of Object.keys(this.transactions)) {
+            this.removeById(id);
+        }
+    }
+
     private purgeExpiredTransactions(): void {
-        for (const id in this.transactions) {
+        for (const id of Object.keys(this.transactions)) {
             if (Date.now() - this.transactions[id].timestamp > 24 * 60 * 60 * 1000) {
                 this.removeById(id);
             }

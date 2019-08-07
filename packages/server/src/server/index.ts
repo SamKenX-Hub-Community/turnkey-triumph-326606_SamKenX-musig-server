@@ -2,6 +2,7 @@ import { Enums, Interfaces, Transactions, Validation } from "@arkecosystem/crypt
 import { Server } from "@hapi/hapi";
 import { IStoreTransaction } from "../interfaces";
 import { logger } from "../services/logger";
+import { TransactionStatus } from "./enums";
 import * as handlers from "./handlers";
 
 const verifySchema = (data: Interfaces.ITransactionData) => {
@@ -38,15 +39,12 @@ export async function startServer(options: Record<string, string | number | bool
                 async query(data: object, options: object) {
                     const schema = {
                         type: "object",
-                        maxProperties: 1,
-                        minProperties: 1,
+                        required: ["publicKey"],
                         properties: {
                             publicKey: {
                                 $ref: "publicKey",
                             },
-                            senderPublicKey: {
-                                $ref: "publicKey",
-                            },
+                            state: { enum: [TransactionStatus.Ready, TransactionStatus.Pending] },
                         },
                     };
                     const { error } = Validation.validator.validate(schema, data);
@@ -90,6 +88,13 @@ export async function startServer(options: Record<string, string | number | bool
                 },
             },
         },
+    });
+
+    // TODO to change obviously, but do we still allow to delete transactions in some way ?
+    server.route({
+        method: "DELETE",
+        path: "/transactions",
+        handler: handlers.deleteTransactions,
     });
 
     await server.start();

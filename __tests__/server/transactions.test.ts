@@ -26,14 +26,15 @@ const multisigAsset = {
 };
 let transaction;
 
-beforeEach(() => {
+beforeEach(async () => {
+    await got.delete("http://localhost:8080/transactions");
     transaction = Transactions.BuilderFactory.multiSignature()
         .multiSignatureAsset(multisigAsset)
         .network(23);
 });
 
 describe("Transactions", () => {
-    describe("GET transaction by ID", () => {
+    describe("GET transactions", () => {
         it("should return no transaction when the given public key doesnt exist", async () => {
             const response = await got.get(
                 `http://localhost:8080/transactions?publicKey=035b63b4668ee261c16ca91443f3371e2fe349e131cb7bf5f8a3e93a3ddfdfc788`,
@@ -42,15 +43,7 @@ describe("Transactions", () => {
             expect(JSON.parse(response.body)).toEqual([]);
         });
 
-        it("should return no transaction when the given sender public key doesnt exist", async () => {
-            const response = await got.get(
-                `http://localhost:8080/transactions?senderPublicKey=035b63b4668ee261c16ca91443f3371e2fe349e131cb7bf5f8a3e93a3ddfdfc788`,
-            );
-
-            expect(JSON.parse(response.body)).toEqual([]);
-        });
-
-        it("should return the transaction associated with the senderPublicKey provided", async () => {
+        it("should return the transaction associated with the sender publicKey provided", async () => {
             const data = transaction
                 .sign(passphrase)
                 .multiSign(passphrase, 0)
@@ -63,14 +56,53 @@ describe("Transactions", () => {
                 }),
             });
 
-            const response = await got.get(
-                `http://localhost:8080/transactions?senderPublicKey=${data.senderPublicKey}`,
-            );
+            const response = await got.get(`http://localhost:8080/transactions?publicKey=${publicKey}`);
             const body = JSON.parse(response.body);
             expect(body).toBeArrayOfSize(1);
             expect(body[0].data).toEqual(JSON.parse(JSON.stringify(data)));
             expect(body[0].multisigAsset).toEqual(multisigAsset);
             expect(body[0]).toHaveProperty("timestamp");
+        });
+
+        it("should filter transactions by state = pending/ready", async () => {
+            const tx1Response = await got.post(`http://localhost:8080/transaction`, {
+                body: JSON.stringify({
+                    data: transaction
+                        .sign(passphrase)
+                        .multiSign(passphrase, 0)
+                        .getStruct(),
+                    multisigAsset,
+                }),
+            });
+
+            const tx2Response = await got.post(`http://localhost:8080/transaction`, {
+                body: JSON.stringify({
+                    data: transaction.multiSign(passphrases[1], 1).getStruct(),
+                    multisigAsset,
+                }),
+            });
+
+            const responsePending = await got.get(
+                `http://localhost:8080/transactions?publicKey=${publicKey}&state=pending`,
+            );
+            const bodyPending = JSON.parse(responsePending.body);
+            expect(bodyPending).toBeArrayOfSize(1);
+            expect(bodyPending[0].id).toEqual(JSON.parse(tx1Response.body).id);
+            expect(bodyPending[0].multisigAsset).toEqual(multisigAsset);
+            expect(bodyPending[0]).toHaveProperty("timestamp");
+
+            const responseReady = await got.get(
+                `http://localhost:8080/transactions?publicKey=${publicKey}&state=ready`,
+            );
+            const bodyReady = JSON.parse(responseReady.body);
+            expect(bodyReady).toBeArrayOfSize(1);
+            expect(bodyReady[0].id).toEqual(JSON.parse(tx2Response.body).id);
+            expect(bodyReady[0].multisigAsset).toEqual(multisigAsset);
+            expect(bodyReady[0]).toHaveProperty("timestamp");
+
+            const responseAll = await got.get(`http://localhost:8080/transactions?publicKey=${publicKey}`);
+            const bodyAll = JSON.parse(responseAll.body);
+            expect(bodyAll).toBeArrayOfSize(2);
         });
     });
 
@@ -109,15 +141,10 @@ describe("Transactions", () => {
             expect(responsePostBody).toHaveProperty("id");
 
             const data2ndSigned = transaction.multiSign(passphrases[2], 2).getStruct();
-            console.log(JSON.stringify(responsePostBody));
-            try {
-                await got.put(`http://localhost:8080/transaction/${responsePostBody.id}`, {
-                    body: JSON.stringify({ data: data2ndSigned }),
-                });
-            } catch (e) {
-                console.log(e);
-                return;
-            }
+
+            await got.put(`http://localhost:8080/transaction/${responsePostBody.id}`, {
+                body: JSON.stringify({ data: data2ndSigned }),
+            });
             const responseGetTx = await got.get(`http://localhost:8080/transaction/${responsePostBody.id}`);
 
             const body = JSON.parse(responseGetTx.body);
