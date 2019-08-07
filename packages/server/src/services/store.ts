@@ -1,6 +1,6 @@
 import { Interfaces } from "@arkecosystem/crypto";
-import { IStoreTransaction } from "../interfaces";
 import uuidv4 from "uuid/v4";
+import { IStoreTransaction } from "../interfaces";
 
 class Store {
     private transactions: { [storeId: string]: IStoreTransaction } = {};
@@ -11,21 +11,20 @@ class Store {
     private txStoreIdsByPublicKey: { [senderPublicKey: string]: string[] } = {};
 
     public saveTransaction(transaction: IStoreTransaction): string {
-        //TODO need some verification
-        //if (Transactions.Verifier.verify(transaction)) {
-            const storeId = uuidv4();
-            transaction.timestamp = Date.now();
-            this.transactions[storeId] = transaction;
-            this.txStoreIdsBySender[transaction.data.senderPublicKey] = this.txStoreIdsBySender[transaction.data.senderPublicKey] || [];
-            this.txStoreIdsBySender[transaction.data.senderPublicKey].push(storeId);
+        const storeId = uuidv4();
+        transaction.timestamp = Date.now();
+        transaction.id = storeId;
+        this.transactions[storeId] = transaction;
+        this.txStoreIdsBySender[transaction.data.senderPublicKey] =
+            this.txStoreIdsBySender[transaction.data.senderPublicKey] || [];
+        this.txStoreIdsBySender[transaction.data.senderPublicKey].push(storeId);
 
-            for (const publicKey of transaction.multisigAsset.publicKeys) {
-                this.txStoreIdsByPublicKey[publicKey] = this.txStoreIdsByPublicKey[publicKey] || [];
-                this.txStoreIdsByPublicKey[publicKey].push(storeId);
-            }
+        for (const publicKey of transaction.multisigAsset.publicKeys) {
+            this.txStoreIdsByPublicKey[publicKey] = this.txStoreIdsByPublicKey[publicKey] || [];
+            this.txStoreIdsByPublicKey[publicKey].push(storeId);
+        }
 
-            return storeId;
-        //}
+        return storeId;
     }
 
     public updateTransaction(transaction: Interfaces.ITransactionData, storeId: string): void {
@@ -62,7 +61,7 @@ class Store {
     }
 
     private purgeExpiredTransactions(): void {
-        for (let id in this.transactions) {
+        for (const id in this.transactions) {
             if (Date.now() - this.transactions[id].timestamp > 24 * 60 * 60 * 1000) {
                 this.removeById(id);
             }
@@ -71,9 +70,11 @@ class Store {
 
     private removeById(storeId: string): void {
         const { data, multisigAsset } = this.transactions[storeId];
-        
+
         // removes indexes
-        this.txStoreIdsBySender[data.senderPublicKey] = this.txStoreIdsBySender[data.senderPublicKey].filter(id => id !== storeId);
+        this.txStoreIdsBySender[data.senderPublicKey] = this.txStoreIdsBySender[data.senderPublicKey].filter(
+            id => id !== storeId,
+        );
         for (const publicKey of multisigAsset.publicKeys) {
             this.txStoreIdsByPublicKey[publicKey] = this.txStoreIdsByPublicKey[publicKey].filter(id => id !== storeId);
         }

@@ -1,4 +1,4 @@
-import { Interfaces, Transactions, Crypto } from "@arkecosystem/crypto";
+import { Crypto, Interfaces, Transactions } from "@arkecosystem/crypto";
 
 // Verifies that all signatures are valid
 export const verifySignatures = (
@@ -18,8 +18,7 @@ export const verifySignatures = (
         excludeMultiSignature: true,
     });
 
-    for (let i = 0; i < signatures.length; i++) {
-        const signature: string = signatures[i];
+    for (const signature of signatures) {
         const publicKeyIndex: number = parseInt(signature.slice(0, 2), 16);
         const partialSignature: string = signature.slice(2, 130);
         const publicKey: string = publicKeys[publicKeyIndex];
@@ -30,4 +29,4 @@ export const verifySignatures = (
     }
 
     return true;
-}
+};
