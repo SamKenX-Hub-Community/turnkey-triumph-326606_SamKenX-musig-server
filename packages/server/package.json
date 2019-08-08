@@ -66,6 +66,7 @@
         "@hapi/boom": "^7.4.2",
         "@hapi/hapi": "^18.3.1",
         "@hapi/joi": "15.1.0",
+        "better-sqlite3": "^5.4.0",
         "got": "^9.6.0",
         "pino": "^5.12.6",
         "pino-pretty": "^3.1.0",

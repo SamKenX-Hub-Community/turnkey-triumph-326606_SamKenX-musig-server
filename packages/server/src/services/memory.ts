@@ -2,7 +2,7 @@ import { Interfaces } from "@arkecosystem/crypto";
 import uuidv4 from "uuid/v4";
 import { IStoreTransaction } from "../interfaces";
 
-class Store {
+class Memory {
     private transactions: { [storeId: string]: IStoreTransaction } = {};
     private lastPurged: number = Date.now();
 
@@ -10,8 +10,8 @@ class Store {
     private txStoreIdsBySender: { [senderPublicKey: string]: string[] } = {};
     private txStoreIdsByPublicKey: { [senderPublicKey: string]: string[] } = {};
 
-    public saveTransaction(transaction: IStoreTransaction): string {
-        const storeId = uuidv4();
+    public saveTransaction(transaction: IStoreTransaction, id?: string): string {
+        const storeId = id || uuidv4();
         transaction.timestamp = Date.now();
         transaction.id = storeId;
         this.transactions[storeId] = transaction;
@@ -68,6 +68,12 @@ class Store {
         }
     }
 
+    public loadTransactions(transactions: IStoreTransaction[]) {
+        for (const transaction of transactions) {
+            this.saveTransaction(transaction);
+        }
+    }    
+
     private purgeExpiredTransactions(): void {
         for (const id of Object.keys(this.transactions)) {
             if (Date.now() - this.transactions[id].timestamp > 24 * 60 * 60 * 1000) {
@@ -92,4 +98,4 @@ class Store {
     }
 }
 
-export const store = new Store();
+export const memory = new Memory();

@@ -1,3 +1,4 @@
+import { Networks } from "@arkecosystem/crypto";
 import Command, { flags } from "@oclif/command";
 import cli from "cli-ux";
 import { confirm } from "../helpers/prompts";
@@ -13,6 +14,11 @@ export abstract class BaseCommand extends Command {
         port: flags.integer({
             description: "the port that should be used to expose the API",
             default: 8080,
+        }),
+        network: flags.string({
+            description: "the network for which the multisignature server is used",
+            default: "testnet",
+            options: Object.keys(Networks),
         }),
     };
 

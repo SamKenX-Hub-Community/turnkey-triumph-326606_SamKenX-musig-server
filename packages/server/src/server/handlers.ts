@@ -1,13 +1,13 @@
 import { Interfaces } from "@arkecosystem/crypto";
 import Boom from "@hapi/boom";
 import { IStoreTransaction } from "../interfaces";
-import { store } from "../services/store";
+import { memory } from "../services/memory";
 import { TransactionStatus } from "./enums";
 import { verifySignatures } from "./utils";
 
 export const getTransactions = (request, h) => {
     if (request.query.publicKey) {
-        const storeTransactions = store.getTransactionsByPublicKey(request.query.publicKey);
+        const storeTransactions = memory.getTransactionsByPublicKey(request.query.publicKey);
 
         if (request.query.state === TransactionStatus.Pending) {
             return storeTransactions.filter(t => t.data.signatures.length < t.multisigAsset.min);
@@ -17,11 +17,11 @@ export const getTransactions = (request, h) => {
         return storeTransactions;
     }
 
-    return store.getAllTransactions(); // keep or throw error ? (why would we need to get all tx ?)
+    return memory.getAllTransactions(); // keep or throw error ? (why would we need to get all tx ?)
 };
 
 export const getTransaction = (request, h) => {
-    return store.getTransactionById(request.params.id);
+    return memory.getTransactionById(request.params.id);
 };
 
 export const postTransaction = (request, h) => {
@@ -35,14 +35,14 @@ export const postTransaction = (request, h) => {
         return Boom.badData("Transaction signatures are not valid");
     }
 
-    const storeId = store.saveTransaction(transaction);
+    const storeId = memory.saveTransaction(transaction);
     return { id: storeId };
 };
 
 export const putTransaction = (request, h) => {
     const data: Interfaces.ITransactionData = request.payload.data;
     const id: string = request.params.id;
-    const storeTransaction = store.getTransactionById(id);
+    const storeTransaction = memory.getTransactionById(id);
     if (!storeTransaction) {
         return Boom.notFound(`Transaction with id ${id} was not found`);
     }
@@ -59,12 +59,12 @@ export const putTransaction = (request, h) => {
         return Boom.badData("Transaction signatures are not valid");
     }
 
-    store.updateTransaction(data, id);
+    memory.updateTransaction(data, id);
 
     return { id };
 };
 
 export const deleteTransactions = (request, h) => {
-    store.deleteAllTransactions();
+    memory.deleteAllTransactions();
     return true;
 };

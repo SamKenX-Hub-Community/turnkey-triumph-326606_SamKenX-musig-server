@@ -2011,6 +2011,14 @@ before-after-hook@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
 
+better-sqlite3@^5.4.0:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-5.4.2.tgz#8eaa7bc5e66c67a4665d45969363cfedbec7ccc1"
+  integrity sha512-BtRGasolxvhCwgsak876fBZiXMn0YNOfvy9RYXT0RO3G8RkL9z45qXTuavuMXUL6bx4cxdxP1k4pC0xOfVKwvg==
+  dependencies:
+    integer "^2.1.0"
+    tar "^4.4.10"
+
 bignumber.js@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.0.tgz#805880f84a329b5eac6e7cb6f8274b6d82bdf075"
@@ -3977,6 +3985,11 @@ inquirer@^6.2.0:
     string-width "^2.1.0"
     strip-ansi "^5.1.0"
     through "^2.3.6"
+
+integer@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/integer/-/integer-2.1.0.tgz#29134ea2f7ba3362ed4dbe6bcca992b1f18ff276"
+  integrity sha512-vBtiSgrEiNocWvvZX1RVfeOKa2mCHLZQ2p9nkQkQZ/BvEiY+6CcUz0eyjvIiewjJoeNidzg2I+tpPJvpyspL1w==
 
 invariant@^2.2.4:
   version "2.2.4"
@@ -7054,7 +7067,7 @@ tar-stream@^2.0.0:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-tar@^4, tar@^4.4.8:
+tar@^4, tar@^4.4.10, tar@^4.4.8:
   version "4.4.10"
   resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.10.tgz#946b2810b9a5e0b26140cf78bea6b0b0d689eba1"
   dependencies:
