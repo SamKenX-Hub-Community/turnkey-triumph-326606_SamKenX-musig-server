@@ -52,10 +52,11 @@ COMMANDS
 multisig-server start
 ```
 
-| Flag               | Description                                                                  | Default                    | Required |
-| ------------------ | ---------------------------------------------------------------------------- | -------------------------- | -------- |
-| --host=            | the host that should be used to expose the RPC                               | 0.0.0.0                    | No       |
-| --port=            | the port that should be used to expose the RPC                               | 8008                       | No       |
+| Flag       | Description                                    | Default | Required |
+| ---------- | ---------------------------------------------- | ------- | -------- |
+| --host=    | the host that should be used to expose the API | 0.0.0.0 | No       |
+| --port=    | the port that should be used to expose the API | 8008    | No       |
+| --network= | the Network on which the server will be used   | testnet | No       |
 
 ### `restart`
 
@@ -85,10 +86,11 @@ multisig-server stop
 multisig-server run
 ```
 
-| Flag               | Description                                                                  | Default                    | Required |
-| ------------------ | ---------------------------------------------------------------------------- | -------------------------- | -------- |    |
-| --host=            | the host that should be used to expose the RPC                               | 0.0.0.0                    | No       |
-| --port=            | the port that should be used to expose the RPC                               | 8008                       | No       |
+| Flag       | Description                                    | Default | Required |
+| ---------- | ---------------------------------------------- | ------- | -------- |
+| --host=    | the host that should be used to expose the API | 0.0.0.0 | No       |
+| --port=    | the port that should be used to expose the API | 8008    | No       |
+| --network= | the Network on which the server will be used   | testnet | No       |
 
 ### `status`
 
