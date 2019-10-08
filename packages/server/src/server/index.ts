@@ -1,6 +1,7 @@
 import { Enums, Interfaces, Managers, Transactions, Types, Validation } from "@arkecosystem/crypto";
 import { Server } from "@hapi/hapi";
 import { IStoreTransaction } from "../interfaces";
+import { corsHeaders, serverType } from "../plugins";
 import { logger } from "../services/logger";
 import { memory } from "../services/memory";
 import { Storage } from "../services/storage";
@@ -42,6 +43,14 @@ export async function startServer(options: Record<string, string | number | bool
     const server = new Server({
         host: options.host as string,
         port: options.port as number,
+    });
+
+    await server.register({
+        plugin: corsHeaders,
+    });
+
+    await server.register({
+        plugin: serverType,
     });
 
     Managers.configManager.setFromPreset(options.network as Types.NetworkName);
