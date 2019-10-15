@@ -1,7 +1,7 @@
 # @arkecosystem/multisig-server
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/ARKEcosystem/multisig-server/master/banner.png" />
+    <img src="https://github.com/ArkEcosystem/multisig-server/blob/master/banner.png?raw=true" />
 </p>
 
 [![Latest Version](https://badgen.now.sh/npm/v/@arkecosystem/multisig-server)](https://www.npmjs.com/package/@arkecosystem/multisig-server)
