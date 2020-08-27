@@ -4,8 +4,9 @@ import { Managers, Transactions } from "@arkecosystem/crypto";
 import { Server } from "@hapi/hapi";
 import fs from "fs-extra";
 import got from "got";
-import * as mocks from "../__mocks__/transaction";
+
 import { launchServer } from "../__support__";
+import * as mocks from "../mocks/transaction";
 
 // the name of sqlite db that is used for saving/restoring tx on stop/start
 const sqliteName = "transactions-storage-testnet.sqlite";

@@ -10,11 +10,11 @@ export const getTransactions = (request, h) => {
 		const storeTransactions = memory.getTransactionsByPublicKey(request.query.publicKey);
 
 		if (request.query.state === TransactionStatus.Pending) {
-			return storeTransactions.filter((t) => t.data.signatures.length < t.multisigAsset.min);
+			return storeTransactions.filter((t) => (t.data.signatures || []).length < t.multisigAsset.min);
 		}
 
 		if (request.query.state === TransactionStatus.Ready) {
-			return storeTransactions.filter((t) => t.data.signatures.length >= t.multisigAsset.min);
+			return storeTransactions.filter((t) => (t.data.signatures || []).length >= t.multisigAsset.min);
 		}
 
 		return storeTransactions;

@@ -1,11 +1,12 @@
 import "jest-extended";
 
-import { Builders } from "@arkecosystem/core-magistrate-crypto";
+// import { Builders } from "@arkecosystem/core-magistrate-crypto";
 import { Identities, Managers, Transactions } from "@arkecosystem/crypto";
 import { Server } from "@hapi/hapi";
 import got from "got";
-import * as mocks from "../__mocks__/transaction";
+
 import { launchServer } from "../__support__";
+import * as mocks from "../mocks/transaction";
 
 let server: Server;
 beforeAll(async () => {
@@ -19,7 +20,9 @@ let transaction;
 describe("Transactions", () => {
 	describe("GET transactions", () => {
 		beforeEach(async () => {
-			await got.delete("http://localhost:8080/transactions");
+			// @ts-ignore
+			server.app.memory.deleteAllTransactions();
+
 			transaction = Transactions.BuilderFactory.multiSignature()
 				.multiSignatureAsset(mocks.multisigAsset)
 				.network(23);
@@ -104,7 +107,9 @@ describe("Transactions", () => {
 
 	describe("MultiSignatureRegistration", () => {
 		beforeEach(async () => {
-			await got.delete("http://localhost:8080/transactions");
+			// @ts-ignore
+			server.app.memory.deleteAllTransactions();
+
 			transaction = Transactions.BuilderFactory.multiSignature()
 				.multiSignatureAsset(mocks.multisigAsset)
 				.network(23);
@@ -191,20 +196,16 @@ describe("Transactions", () => {
 			"transfer",
 			Transactions.BuilderFactory.transfer().recipientId("ARwS7GvSqkaJsGXU1qoREt86UPf2KLbGKd").amount("1") as any,
 		],
-		[
-			"business registration",
-			new Builders.BusinessRegistrationBuilder()
-				.senderPublicKey(Identities.PublicKey.fromMultiSignatureAsset(mocks.multisigAsset))
-				.businessRegistrationAsset({
-					name: "newbusiness",
-					website: "http://business.new",
-				}) as any,
-		],
+		// [
+		// 	"business registration",
+		// 	new Builders.BusinessRegistrationBuilder()
+		// 		.senderPublicKey(Identities.PublicKey.fromMultiSignatureAsset(mocks.multisigAsset))
+		// 		.businessRegistrationAsset({
+		// 			name: "newbusiness",
+		// 			website: "http://business.new",
+		// 		}) as any,
+		// ],
 	])("%s multisigned", (name, builder) => {
-		beforeAll(async () => {
-			await got.delete("http://localhost:8080/transactions");
-		});
-
 		describe("POST transaction", () => {
 			let transactionStoreId: string;
 			it(`should store multisignature ${name} with one signature`, async () => {

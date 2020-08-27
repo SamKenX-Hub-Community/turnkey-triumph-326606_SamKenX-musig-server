@@ -45,6 +45,7 @@ export async function startServer(options: Record<string, string | number | bool
 		options: {
 			auth: false,
 			validate: {
+				// @ts-ignore
 				async query(data: object, options: object) {
 					const schema = {
 						type: "object",
@@ -77,6 +78,7 @@ export async function startServer(options: Record<string, string | number | bool
 		options: {
 			auth: false,
 			validate: {
+				// @ts-ignore
 				async payload(data: IStoreTransaction, options: object) {
 					transactionSchemaVerifier.verifySchema(data.data);
 				},
@@ -95,6 +97,9 @@ export async function startServer(options: Record<string, string | number | bool
 	await server.start();
 
 	logger.info(`MultiSignature server running on ${server.info.uri}`);
+
+	// @ts-ignore
+	server.app.memory = memory;
 
 	return server;
 }

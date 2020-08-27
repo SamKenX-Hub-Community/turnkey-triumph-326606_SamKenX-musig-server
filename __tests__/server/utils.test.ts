@@ -2,8 +2,8 @@ import "jest-extended";
 
 import { Managers, Transactions } from "@arkecosystem/crypto";
 
-import { multisigAsset, passphrase, passphrases, publicKey } from "../__mocks__/transaction";
 import { getBaseTransactionId } from "../../src/app/server/utils";
+import { multisigAsset, passphrase, passphrases, publicKey } from "../mocks/transaction";
 
 beforeAll(async () => {
 	Managers.configManager.setFromPreset("testnet");

@@ -1,4 +1,5 @@
 import { Server } from "@hapi/hapi";
+
 import { startServer } from "../../src/app/server";
 
 jest.setTimeout(10000);

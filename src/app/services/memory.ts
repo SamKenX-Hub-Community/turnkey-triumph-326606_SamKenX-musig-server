@@ -31,11 +31,20 @@ class Memory {
 	public updateTransaction(transaction: Interfaces.ITransactionData): void {
 		const storeId = getBaseTransactionId(transaction);
 		const storeTxToUpdate = this.transactions[storeId];
+
 		if (!storeTxToUpdate) {
 			throw new Error(`No transaction found for store ID ${storeId}`);
 		}
 
-		for (const signatureIndex of Object.keys(transaction.signatures)) {
+		if (transaction.signatures === undefined) {
+			throw new Error(`Transaction [${storeId}] has no signatures.`);
+		}
+
+		for (let signatureIndex = 0; signatureIndex < transaction.signatures.length; signatureIndex++) {
+			if (storeTxToUpdate.data.signatures === undefined) {
+				storeTxToUpdate.data.signatures = [];
+			}
+
 			storeTxToUpdate.data.signatures[signatureIndex] = transaction.signatures[signatureIndex];
 		}
 
@@ -104,7 +113,13 @@ class Memory {
 
 	private purgeExpiredTransactions(): void {
 		for (const id of Object.keys(this.transactions)) {
-			if (Date.now() - this.transactions[id].timestamp > 24 * 60 * 60 * 1000) {
+			const transaction = this.transactions[id];
+
+			if (!transaction || !transaction?.timestamp) {
+				throw new Error(`Transaction [${id}] could not be found.`);
+			}
+
+			if (Date.now() - transaction.timestamp > 24 * 60 * 60 * 1000) {
 				this.removeById(id);
 			}
 		}
