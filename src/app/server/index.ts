@@ -60,7 +60,6 @@ export async function startServer(options: Record<string, string | number | bool
 			}
 		},
 		options: {
-			auth: false,
 			validate: {
 				// @ts-ignore
 				async query(data: object, options: object) {
@@ -127,7 +126,6 @@ export async function startServer(options: Record<string, string | number | bool
 			}
 		},
 		options: {
-			auth: false,
 			validate: {
 				// @ts-ignore
 				async payload(data: IStoreTransaction, options: object) {

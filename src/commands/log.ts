@@ -30,6 +30,7 @@ export class LogCommand extends BaseCommand {
 
 		this.abortMissingProcess(processName);
 
+		// @ts-ignore
 		const { pm2_env } = processManager.describe(processName);
 
 		const file = flags.error ? pm2_env.pm_err_log_path : pm2_env.pm_out_log_path;

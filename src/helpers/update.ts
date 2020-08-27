@@ -7,7 +7,7 @@ import latestVersion from "latest-version";
 import { join } from "path";
 import semver from "semver";
 
-async function getLatestVersion(name: string): Promise<string> {
+async function getLatestVersion(name: string): Promise<string | undefined> {
 	try {
 		const version: string = await latestVersion(name);
 
@@ -27,7 +27,7 @@ function ensureCacheFile(config: IConfig): string {
 	return fileName;
 }
 
-export async function installFromChannel(pkg, tag) {
+export function installFromChannel(pkg, tag): void {
 	const { stdout, stderr } = sync(`yarn global add ${pkg}@${tag}`, { shell: true });
 
 	if (stderr) {

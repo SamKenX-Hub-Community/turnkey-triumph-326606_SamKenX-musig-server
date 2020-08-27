@@ -28,7 +28,7 @@ export abstract class BaseCommand extends Command {
 	};
 
 	protected flagsToStrings(flags: CommandFlags, ignoreKeys: string[] = []): string {
-		const mappedFlags = [];
+		const mappedFlags: any[] = [];
 
 		for (const [key, value] of Object.entries(flags)) {
 			if (!ignoreKeys.includes(key) && value !== undefined) {
@@ -51,7 +51,7 @@ export abstract class BaseCommand extends Command {
 		this.error("Please enter valid data and try again!");
 	}
 
-	protected async restartRunningProcessPrompt(processName: string, showPrompt = true) {
+	protected async restartRunningProcessPrompt(processName: string, showPrompt = true): Promise<void> {
 		if (processManager.isOnline(processName)) {
 			if (showPrompt) {
 				await confirm(`Would you like to restart the ${processName} process?`, () => {

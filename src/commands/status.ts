@@ -25,6 +25,7 @@ export class StatusCommand extends BaseCommand {
 		this.abortMissingProcess(processName);
 
 		renderTable(["ID", "Name", "Version", "Status", "Uptime", "CPU", "RAM"], (table: Table.Table) => {
+			// @ts-ignore
 			const app: ProcessDescription = processManager.describe(processName);
 
 			// @ts-ignore

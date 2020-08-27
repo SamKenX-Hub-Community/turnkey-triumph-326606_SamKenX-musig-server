@@ -61,7 +61,7 @@ export class UpdateCommand extends BaseCommand {
 	private async performUpdate(flags: CommandFlags, state: Record<string, any>): Promise<void> {
 		cli.action.start(`Updating from ${state.currentVersion} to ${state.updateVersion}`);
 
-		await installFromChannel(state.name, state.updateVersion);
+		installFromChannel(state.name, state.updateVersion);
 
 		cli.action.stop();
 

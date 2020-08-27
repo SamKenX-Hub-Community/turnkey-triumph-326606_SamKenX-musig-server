@@ -18,6 +18,10 @@ export const init: Hook<"init"> = async function (opts) {
 		return;
 	}
 
+	if (!opts.id) {
+		return;
+	}
+
 	let binHelp = `${opts.config.bin} help`;
 	const idSplit = opts.id.split(":");
 	if (opts.config.findTopic(idSplit[0])) {
