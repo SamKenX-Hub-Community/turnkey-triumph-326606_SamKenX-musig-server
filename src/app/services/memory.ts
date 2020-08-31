@@ -12,6 +12,8 @@ class Memory {
 	private txStoreIdsByPublicKey: { [senderPublicKey: string]: string[] } = {};
 
 	public saveTransaction(transaction: IStoreTransaction): string {
+		this.hasRemainingTransactionSlots(transaction.data.senderPublicKey);
+
 		const storeId = getBaseTransactionId(transaction.data);
 		transaction.timestamp = Date.now();
 		transaction.id = storeId;
@@ -111,6 +113,7 @@ class Memory {
 		delete this.transactions[storeId];
 	}
 
+	// TODO: run this automatically every 24 hours
 	private purgeExpiredTransactions(): void {
 		for (const id of Object.keys(this.transactions)) {
 			const transaction = this.transactions[id];
@@ -122,6 +125,14 @@ class Memory {
 			if (Date.now() - transaction.timestamp > 24 * 60 * 60 * 1000) {
 				this.removeById(id);
 			}
+		}
+	}
+
+	private hasRemainingTransactionSlots(publicKey: string): void {
+		const pendingCount: number = (this.txStoreIdsBySender[publicKey] || []).length;
+
+		if (pendingCount > 3) {
+			throw new Error(`The public key [${publicKey}] has reached its maximum of 3 pending transactions.`);
 		}
 	}
 }

@@ -63,11 +63,15 @@ export async function startServer(options: Record<string, string | number | bool
 				const storeTransactions = memory.getTransactionsByPublicKey(request.query.publicKey);
 
 				if (request.query.state === TransactionStatus.Pending) {
-					return storeTransactions.filter((t) => (t.data.signatures || []).length < t.multisigAsset.min);
+					return storeTransactions.filter(
+						(transaction) => (transaction.data.signatures || []).length < transaction.multisigAsset.min,
+					);
 				}
 
 				if (request.query.state === TransactionStatus.Ready) {
-					return storeTransactions.filter((t) => (t.data.signatures || []).length >= t.multisigAsset.min);
+					return storeTransactions.filter(
+						(transaction) => (transaction.data.signatures || []).length >= transaction.multisigAsset.min,
+					);
 				}
 
 				return storeTransactions;
@@ -133,6 +137,7 @@ export async function startServer(options: Record<string, string | number | bool
 
 				const baseTransactionId = getBaseTransactionId(transaction.data);
 				const storeTransaction = memory.getTransactionById(baseTransactionId);
+
 				if (storeTransaction) {
 					memory.updateTransaction(transaction.data);
 
