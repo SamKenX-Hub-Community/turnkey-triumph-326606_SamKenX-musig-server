@@ -11,6 +11,10 @@ class Memory {
 	private txStoreIdsBySender: { [senderPublicKey: string]: string[] } = {};
 	private txStoreIdsByPublicKey: { [senderPublicKey: string]: string[] } = {};
 
+	public constructor() {
+		setInterval(() => this.purgeExpiredTransactions(), 15 * 60 * 1000);
+	}
+
 	public saveTransaction(transaction: IStoreTransaction): string {
 		this.hasRemainingTransactionSlots(transaction.data.senderPublicKey);
 
@@ -60,11 +64,6 @@ class Memory {
 	}
 
 	public getTransactionById(storeId: string): IStoreTransaction {
-		if (Date.now() - this.lastPurged > 60 * 60 * 1000) {
-			// launch purge every hour
-			this.purgeExpiredTransactions();
-			this.lastPurged = Date.now();
-		}
 		return this.transactions[storeId];
 	}
 
@@ -126,6 +125,8 @@ class Memory {
 				this.removeById(id);
 			}
 		}
+
+		this.lastPurged = Date.now();
 	}
 
 	private hasRemainingTransactionSlots(publicKey: string): void {
