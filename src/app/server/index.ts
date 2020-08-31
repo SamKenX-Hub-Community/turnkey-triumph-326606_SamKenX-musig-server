@@ -3,7 +3,7 @@ import Boom from "@hapi/boom";
 import { Server } from "@hapi/hapi";
 
 import { IStoreTransaction } from "../interfaces";
-import { corsHeaders, serverType } from "../plugins";
+import { corsHeaders, serverType } from "./plugins";
 import { logger } from "../services/logger";
 import { memory } from "../services/memory";
 import { Storage } from "../services/storage";
