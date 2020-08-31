@@ -39,6 +39,8 @@ $ multisig-server start
 			},
 			flags,
 		);
+
+		process.exit();
 	}
 
 	protected async runWithPm2(options: ProcessOptions, flags: CommandFlags) {
