@@ -12,7 +12,7 @@
 	"main": "dist/index",
 	"types": "dist/index",
 	"bin": {
-		"multisig-server": "./bin/run"
+		"musig": "./bin/run"
 	},
 	"scripts": {
 		"build": "yarn clean && yarn compile",
@@ -125,7 +125,7 @@
 				"./dist/hooks/command_not_found/suggest"
 			]
 		},
-		"bin": "multisig-server",
+		"bin": "musig",
 		"plugins": [
 			"@oclif/plugin-autocomplete",
 			"@oclif/plugin-commands",
