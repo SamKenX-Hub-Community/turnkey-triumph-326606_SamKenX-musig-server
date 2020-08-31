@@ -5,7 +5,6 @@ import { getBaseTransactionId } from "../server/utils";
 
 class Memory {
 	private transactions: { [storeId: string]: IStoreTransaction } = {};
-	private lastPurged: number = Date.now();
 
 	// indexes on storeId
 	private txStoreIdsBySender: { [senderPublicKey: string]: string[] } = {};
@@ -125,8 +124,6 @@ class Memory {
 				this.removeById(id);
 			}
 		}
-
-		this.lastPurged = Date.now();
 	}
 
 	private hasRemainingTransactionSlots(publicKey: string): void {
