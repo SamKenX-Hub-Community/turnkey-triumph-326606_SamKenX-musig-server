@@ -1,7 +1,7 @@
 {
-	"private": true,
 	"name": "multisig-server",
-	"description": "A JSON-RPC 2.0 specification compliant server for Exchanges to interact with the ARK Blockchain.",
+	"version": "1.0.0",
+	"description": "A RESTful API to interact with Multi-Signatures on the ARK Blockchain.",
 	"license": "MIT",
 	"author": "Brian Faust <brian@ark.io>",
 	"files": [
