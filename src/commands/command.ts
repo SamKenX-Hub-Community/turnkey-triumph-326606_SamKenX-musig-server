@@ -31,7 +31,7 @@ export abstract class BaseCommand extends Command {
 		}),
 		rateLimitPoints: flags.integer({
 			description: "The number of requests per duration.",
-			default: 90,
+			default: 60,
 		}),
 		rateLimitDuration: flags.integer({
 			description: "The duration for which a certain of requests is allowed.",

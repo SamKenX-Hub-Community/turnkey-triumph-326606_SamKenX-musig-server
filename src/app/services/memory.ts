@@ -126,7 +126,7 @@ class Memory {
 	private hasRemainingTransactionSlots(publicKey: string): void {
 		const pendingCount: number = (this.txStoreIdsBySender[publicKey] || []).length;
 
-		if (pendingCount > 3) {
+		if (pendingCount >= 3) {
 			throw new Error(`The public key [${publicKey}] has reached its maximum of 3 pending transactions.`);
 		}
 	}
