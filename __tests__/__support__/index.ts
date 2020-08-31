@@ -9,5 +9,10 @@ export const launchServer = async (): Promise<Server> => {
 		host: "0.0.0.0",
 		port: 8080,
 		network: "testnet",
+		whitelist: "*",
+		rateLimitPoints: 90,
+		rateLimitDuration: 60000,
+		rateLimitWhitelist: "*",
+		rateLimitBlacklist: "",
 	});
 };
