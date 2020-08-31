@@ -9,21 +9,41 @@ import { CommandFlags } from "../types";
 export abstract class BaseCommand extends Command {
 	public static flagsConfiguration: Record<string, object> = {
 		host: flags.string({
-			description: "the host that should be used to expose the API",
+			description: "The host that should be used to expose the API.",
 			default: "0.0.0.0",
 		}),
 		port: flags.integer({
-			description: "the port that should be used to expose the API",
+			description: "The port that should be used to expose the API.",
 			default: 8080,
 		}),
 		network: flags.string({
-			description: "the network for which the multisignature server is used",
+			description: "The network for which the Multi-Signature server is used.",
 			default: "testnet",
 			options: Object.keys(Networks),
 		}),
 		height: flags.integer({
-			description: "the height to load in the network milestone(s)",
+			description: "The height to load in the network milestone(s)",
 			default: 1,
+		}),
+		whitelist: flags.string({
+			description: "The network for which the multisignature server is used",
+			default: "*",
+		}),
+		rateLimitPoints: flags.integer({
+			description: "The number of requests per duration.",
+			default: 300,
+		}),
+		rateLimitDuration: flags.integer({
+			description: "The duration for which a certain of requests is allowed.",
+			default: 60000,
+		}),
+		rateLimitWhitelist: flags.string({
+			description: "The list of IP addresses that is allowed to bypass the rate limit.",
+			default: "*",
+		}),
+		rateLimitBlacklist: flags.string({
+			description: "The list of IP addresses that is not allowed to bypass the rate limit.",
+			default: "",
 		}),
 	};
 

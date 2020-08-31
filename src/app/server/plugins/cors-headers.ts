@@ -1,6 +1,7 @@
-export const corsHeaders = {
+export const plugin = {
 	name: "cors-headers",
-	version: "0.1.0",
+	version: "1.0.0",
+	once: true,
 	register(server, options) {
 		server.ext({
 			type: "onPreResponse",

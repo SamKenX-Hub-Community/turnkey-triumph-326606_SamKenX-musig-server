@@ -11,15 +11,17 @@ const isWhitelisted = (whitelist: string[], remoteAddress: string): boolean => {
 			if (nm.isMatch(remoteAddress, ip)) {
 				return true;
 			}
+			// eslint-disable-next-line no-empty
 		} catch {}
 	}
 
 	return false;
 };
 
-export const whitelist = {
+export const plugin = {
 	name: "whitelist",
-	version: "0.1.0",
+	version: "1.0.0",
+	once: true,
 	register(server, options) {
 		server.ext({
 			type: "onRequest",
@@ -28,7 +30,9 @@ export const whitelist = {
 					return h.continue;
 				}
 
-				if (isWhitelisted(options.whitelist, request.info.remoteAddress)) {
+				const whitelist = options.whitelist.split(",") || ["*"];
+
+				if (isWhitelisted(whitelist, request.info.remoteAddress)) {
 					return h.continue;
 				}
 

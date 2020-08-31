@@ -24,24 +24,23 @@ const isListed = (ip: string, patterns: string[]): boolean => {
 	return false;
 };
 
-export = {
+export const plugin = {
 	name: "rate-limit",
 	version: "1.0.0",
 	once: true,
 	async register(
 		server: Hapi.Server,
-		options: { enabled: boolean; points: number; duration: number; whitelist: string[]; blacklist: string[] },
+		options: { points: number; duration: number; whitelist: string; blacklist: string },
 	): Promise<void> {
-		if (options.enabled === false) {
-			return;
-		}
+		const whiteList = options.whitelist.split(",") || ["*"];
+		const blackList = options.blacklist.split(",") || [];
 
 		const rateLimiter = new RLWrapperBlackAndWhite({
 			limiter: new RateLimiterMemory({ points: options.points, duration: options.duration }),
-			whiteList: options.whitelist || ["*"],
-			blackList: options.blacklist || [],
-			isWhiteListed: (ip: string) => isListed(ip, options.whitelist),
-			isBlackListed: (ip: string) => isListed(ip, options.blacklist),
+			whiteList,
+			blackList,
+			isWhiteListed: (ip: string) => isListed(ip, whiteList),
+			isBlackListed: (ip: string) => isListed(ip, blackList),
 			runActionAnyway: false,
 		});
 

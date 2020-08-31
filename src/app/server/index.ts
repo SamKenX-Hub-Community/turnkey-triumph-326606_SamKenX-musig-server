@@ -3,7 +3,6 @@ import Boom from "@hapi/boom";
 import { Server } from "@hapi/hapi";
 
 import { IStoreTransaction } from "../interfaces";
-import { corsHeaders, serverType } from "./plugins";
 import { logger } from "../services/logger";
 import { memory } from "../services/memory";
 import { Storage } from "../services/storage";
@@ -28,11 +27,28 @@ export async function startServer(options: Record<string, string | number | bool
 	});
 
 	await server.register({
-		plugin: corsHeaders,
+		plugin: require("./plugins/whitelist").plugin,
+		options: {
+			whitelist: options.whitelist,
+		},
 	});
 
 	await server.register({
-		plugin: serverType,
+		plugin: require("./plugins/rate-limit").plugin,
+		options: {
+			points: options.rateLimitPoints,
+			duration: options.rateLimitDuration,
+			whitelist: options.rateLimitWhitelist,
+			blacklist: options.rateLimitBlacklist,
+		},
+	});
+
+	await server.register({
+		plugin: require("./plugins/cors-headers").plugin,
+	});
+
+	await server.register({
+		plugin: require("./plugins/server-type").plugin,
 	});
 
 	Managers.configManager.setFromPreset(options.network as Types.NetworkName);
