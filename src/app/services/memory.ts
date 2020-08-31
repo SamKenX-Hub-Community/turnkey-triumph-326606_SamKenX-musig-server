@@ -58,8 +58,6 @@ class Memory {
 		}
 
 		this.transactions[storeId].data.id = Transactions.Utils.getId(storeTxToUpdate.data);
-
-		// TODO check signature is valid
 	}
 
 	public getTransactionById(storeId: string): IStoreTransaction {
@@ -111,7 +109,6 @@ class Memory {
 		delete this.transactions[storeId];
 	}
 
-	// TODO: run this automatically every 24 hours
 	private purgeExpiredTransactions(): void {
 		for (const id of Object.keys(this.transactions)) {
 			const transaction = this.transactions[id];
