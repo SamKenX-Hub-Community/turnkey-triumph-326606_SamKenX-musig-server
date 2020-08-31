@@ -63,16 +63,19 @@ export async function startServer(options: Record<string, string | number | bool
 			validate: {
 				// @ts-ignore
 				async query(data: object, options: object) {
-					const schema = {
-						type: "object",
-						properties: {
-							publicKey: {
-								$ref: "publicKey",
+					const { error } = Validation.validator.validate(
+						{
+							type: "object",
+							properties: {
+								publicKey: {
+									$ref: "publicKey",
+								},
+								state: { enum: [TransactionStatus.Ready, TransactionStatus.Pending] },
 							},
-							state: { enum: [TransactionStatus.Ready, TransactionStatus.Pending] },
 						},
-					};
-					const { error } = Validation.validator.validate(schema, data);
+						data,
+					);
+
 					if (error) {
 						throw new Error(error);
 					}
