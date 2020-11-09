@@ -1,6 +1,6 @@
 {
 	"name": "@arkecosystem/multisig-server",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "A RESTful API to interact with Multi-Signatures on the ARK Blockchain.",
 	"license": "MIT",
 	"author": "Brian Faust <brian@ark.io>",
